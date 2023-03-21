@@ -51,7 +51,7 @@ class model_filtering(APIView):
 
     
     def filtering(self, genres) : 
-        movie_list = pd.read_excel(r'C:\movie_list\movies_list\movies\movie_1822_1.xlsx')
+        movie_list = pd.read_excel('./movie_1822_1.xlsx')
         movie_list['genre'] = movie_list['genre'].replace(np.nan, " ")
         fmovie = pd.DataFrame()
         for g in genres : 
@@ -89,8 +89,8 @@ class model_similarity(APIView):
 
     def similarity(self,code_num):
         
-        movie_list = pd.read_excel(r'C:\movie_list\movies_list\movies\movie_1822_1.xlsx')
-        movie_10 = pd.read_excel(r'C:\movie_list\movies_list\movies\movie_2023_box.xlsx')   
+        movie_list = pd.read_excel('./movie_1822_1.xlsx')
+        movie_10 = pd.read_excel('./movie_2023_box.xlsx')   
 
         movie_one = movie_list.loc[movie_list["code"] == int(code_num)]
         # print(movie_one)
