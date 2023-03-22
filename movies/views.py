@@ -114,7 +114,7 @@ class model_similarity(APIView):
                 
         similar_movies = self.find_sim_movie(movie_sim, all_combined_sim_sorted_ind, int(code_num), top_n=20)
 
-        return similar_movies['code']
+        return similar_movies['code'][1:4]
 
     def find_sim_movie(self,df, sorted_ind, code_num, top_n=20):
     
