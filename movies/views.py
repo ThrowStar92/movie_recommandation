@@ -13,9 +13,23 @@ from django.conf import settings
 
 # Create your views here.
 
-class error(APIView) :
+class home(APIView) :
     def get(self, request) :
-        return Response("형식에 맞춰서 보내주세요")
+        filter = "요청 주소는  <filter>: filter/장르이고, 여러개 보낼시 장르1, 장르2, 장르3 등..  /   <similar>: similar/영화코드입니다."
+        
+        return Response(filter)
+
+
+class filter(APIView) :
+    def get(self, request) :
+        filter = "요청 주소는  <filter>: filter/장르이고, 여러개 보낼시 장르1, 장르2, 장르3 등.. //"
+        return Response(filter + "형식에 맞춰서 보내주세요")
+
+class similar(APIView) :
+    def get(self, request) :
+        filter = "요청 주소는 <similar>: similar/영화코드입니다. //"
+
+        return Response(filter + "형식에 맞춰서 보내주세요")
 
 
 class model_filtering(APIView):
