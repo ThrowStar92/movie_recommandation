@@ -25,18 +25,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 
 #로컬용 ---------------------------
-# SECRET_KEY = 'django-insecure-j%-@afjsp1)+)z(z4_#_wi8=a)fc4y79y$ykh-@q&2h2*!5^ba'
+SECRET_KEY = 'django-insecure-j%-@afjsp1)+)z(z4_#_wi8=a)fc4y79y$ykh-@q&2h2*!5^ba'
 #----------------------------------
 
 #서버용------------------------
-def get_env_variable(var_name):
-  try:
-    return os.environ[var_name]
-  except KeyError:
-    error_msg = 'Set the {} environment variable'.format(var_name)
-    raise ImproperlyConfigured(error_msg)
+# def get_env_variable(var_name):
+#   try:
+#     return os.environ[var_name]
+#   except KeyError:
+#     error_msg = 'Set the {} environment variable'.format(var_name)
+#     raise ImproperlyConfigured(error_msg)
 
-SECRET_KEY = get_env_variable('DJANGO_SECRET')
+# SECRET_KEY = get_env_variable('DJANGO_SECRET')
 #--------------------------------
 
 # SECURITY WARNING: don't run with debug turned on in production!

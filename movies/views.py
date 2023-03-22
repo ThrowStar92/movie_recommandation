@@ -60,7 +60,7 @@ class model_filtering(APIView):
         fmovie_sort_four = fmovie_sort.head(9)
         fmovie_sort_four_code = fmovie_sort_four['code']
         
-        return fmovie_sort_four_code.to_dict()
+        return fmovie_sort_four_code
 
 class model_similarity(APIView):    
 
