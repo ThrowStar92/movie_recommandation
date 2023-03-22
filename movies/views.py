@@ -57,7 +57,7 @@ class model_filtering(APIView):
         fmovie = fmovie.drop_duplicates("title")
         
         fmovie_sort = fmovie.sort_values(by=fmovie.columns[8],ascending = False)
-        fmovie_sort_four = fmovie_sort.head(3)
+        fmovie_sort_four = fmovie_sort.head(9)
         fmovie_sort_four_code = fmovie_sort_four['code']
         
         return fmovie_sort_four_code.to_dict()
