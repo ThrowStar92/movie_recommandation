@@ -8,6 +8,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 import numpy as np
 import os
+import json
 from pathlib import Path
 from django.conf import settings
 
@@ -57,11 +58,20 @@ class model_filtering(APIView):
         fmovie = fmovie.drop_duplicates("title")
         
         fmovie_sort = fmovie.sort_values(by=fmovie.columns[8],ascending = False)
-        fmovie_sort_four = fmovie_sort.head(9)
+        fmovie_sort_four = fmovie_sort.head(3)
         fmovie_sort_four_code = fmovie_sort_four['code']
-        
-        return fmovie_sort_four_code
+        result_code = fmovie_sort_four_code.tolist()
+        fmovie_sort_four_title = fmovie_sort_four['title']
+        result_title = fmovie_sort_four_title.tolist()
 
+        res_data = []
+        for title, code in zip(result_title, result_code):
+            res_data.append({"code": code, "title": title})
+        dict_data = {"data": res_data}
+        json_obj = json.dumps(dict_data, ensure_ascii=False)
+        return json_obj
+    # print(type(json_obj))
+        # print(res_data)
 class model_similarity(APIView):    
 
     def get(self, request, movieCode):
@@ -82,7 +92,7 @@ class model_similarity(APIView):
 
     def similarity(self,code_num):
         movie_list = pd.read_excel(r'./movies/movie_1822_1.xlsx')
-        movie_10 = pd.read_excel(r'./movies/movie_2023_box.xlsx')
+        movie_10 = pd.read_excel(r'./movies/movie_box_test.xlsx')
 
         movie_one = movie_list.loc[movie_list["code"] == int(code_num)]
         movie_one_gen = movie_one["genre"]
@@ -128,7 +138,7 @@ class model_similarity(APIView):
                 
         similar_movies = self.find_sim_movie(movie_sim, all_combined_sim_sorted_ind, int(code_num), top_n=20)
 
-        return similar_movies['code'][1:4]
+        return similar_movies
 
     def find_sim_movie(self,df, sorted_ind, code_num, top_n=20):
     
@@ -139,13 +149,18 @@ class model_similarity(APIView):
         # sorted_ind 인자로 입력된 genre_sim_sorted_ind 객체에서 유사도 순으로 top_n 개의 index 추출
         title_index = title_movie.index.values
         similar_indexes = sorted_ind[title_index, :(top_n)]
-
-        # 추출된 top_n index들 출력. top_n index는 2차원 데이터 임. 
-        #dataframe에서 index로 사용하기 위해서 1차원 array로 변경
-        print(similar_indexes)
         similar_indexes = similar_indexes.reshape(-1)
+        
+        result_data = []
+        for idx in similar_indexes:
+            # result_data.append({"code": str(df.iloc[idx]["code"]), "title": df.iloc[idx]["title"]})
+            # result_data.append(str(df.iloc[idx]))
+            result_data.append(str(idx))
+        print(result_data[1:4])
+        dict_data = {"data": {1:result_data[1],2:result_data[2],3:result_data[3]}}
 
-        return df.iloc[similar_indexes]    
+        json_obj = json.dumps(dict_data, ensure_ascii=False)
+        return json_obj 
         
 
 
