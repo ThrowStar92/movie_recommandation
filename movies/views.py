@@ -11,7 +11,7 @@ import os
 import json
 from pathlib import Path
 from django.conf import settings
-
+import random
 # Create your views here.
 
 class home(APIView) :
@@ -36,8 +36,8 @@ class similar(APIView) :
 class model_filtering(APIView):
 
     def get(self, request, genres):
-        print(genres)
-        filtered_movies = self.filtering(genres)
+        print("장르", genres)
+        filtered_movies = self.filtering(genres.split(','))
         return Response(filtered_movies)
 
     # def post(self, request):
@@ -48,20 +48,20 @@ class model_filtering(APIView):
 
     
     def filtering(self, genres) : 
-        movie_list = pd.read_excel(r'./movies/movie_1822_1.xlsx')
-        movie_list['genre'] = movie_list['genre'].replace(np.nan, " ")
+        movie_list = pd.read_excel(r'./movies/movie_0222.xlsx')
+        # movie_list['genre'] = movie_list['genre'].replace(np.nan, " ")
         fmovie = pd.DataFrame()
         for g in genres : 
 
             fmovie = fmovie.append(movie_list[movie_list["genre"].str.contains(g)])
 
         fmovie = fmovie.drop_duplicates("title")
-        
-        fmovie_sort = fmovie.sort_values(by=fmovie.columns[8],ascending = False)
-        fmovie_sort_four = fmovie_sort.head(9)
-        fmovie_sort_four_code = fmovie_sort_four['code']
+        fmovie_sort = fmovie.sort_values(['rate'],ascending = False).head(9)
+
+        fmovie_sort_random = fmovie_sort.sample(n=9 , random_state=random.seed())
+        fmovie_sort_four_code = fmovie_sort_random['code']
         result_code = fmovie_sort_four_code.tolist()
-        fmovie_sort_four_title = fmovie_sort_four['title']
+        fmovie_sort_four_title = fmovie_sort_random['title']
         result_title = fmovie_sort_four_title.tolist()
 
         res_data = []
@@ -91,7 +91,7 @@ class model_similarity(APIView):
     #     return Response(similiarity_movies)
 
     def similarity(self,code_num):
-        movie_list = pd.read_excel(r'./movies/movie_1822_1.xlsx')
+        movie_list = pd.read_excel(r'./movies/movie_0222.xlsx')
         movie_10 = pd.read_excel(r'./movies/movie_box_test.xlsx')
 
         movie_one = movie_list.loc[movie_list["code"] == int(code_num)]
